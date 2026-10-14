@@ -12,10 +12,10 @@
   --line:#e6eaf0;
   --paper:#ffffff;
   --bg:#f4f7fb;
-  --navy:#0f2742;
-  --blue:#2369a8;
-  --blue-soft:#edf5fc;
-  --green:#11835b;
+  --navy:#9a3f00;
+  --blue:#f57c00;
+  --blue-soft:#fff3e6;
+  --green:#c95f00;
   --shadow:0 18px 50px rgba(28, 45, 75, .09);
 }
 *{box-sizing:border-box}
@@ -24,7 +24,7 @@ body{
   margin:0;
   color:var(--ink);
   background:
-    radial-gradient(circle at 85% 0%, #eaf3fb 0, transparent 24rem),
+    radial-gradient(circle at 85% 0%, #fff0df 0, transparent 24rem),
     linear-gradient(#f8fafc 0, var(--bg) 24rem);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
   line-height:1.72;
@@ -63,7 +63,7 @@ button{font:inherit}
 .hero{
   display:grid; grid-template-columns:1fr 220px; gap:34px; align-items:center;
   padding:40px 42px;
-  background:linear-gradient(135deg, #ffffff 0%, #fbfdff 70%, #eef6fc 100%);
+  background:linear-gradient(135deg, #ffffff 0%, #fffdf9 70%, #fff1df 100%);
   border:1px solid #e2e8f0;
   border-radius:26px;
   box-shadow:var(--shadow);
@@ -72,11 +72,11 @@ button{font:inherit}
 }
 .hero:before{
   content:""; position:absolute; left:0; top:0; bottom:0; width:7px;
-  background:linear-gradient(180deg,var(--blue),var(--navy));
+  background:linear-gradient(180deg,#ff9a3d,var(--navy));
 }
 .eyebrow{color:var(--blue);font-weight:800;font-size:13px;letter-spacing:.08em}
 h1{margin:6px 0 2px;font-size:42px;line-height:1.12;letter-spacing:.05em}
-.role{font-size:20px;font-weight:760;color:#294764}
+.role{font-size:20px;font-weight:760;color:#7a430f}
 .contact{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px;color:var(--muted);font-size:14px}
 .summary{margin:24px 0 0;max-width:760px;font-size:15px;color:#344054}
 .photo-wrap{
@@ -109,11 +109,11 @@ h1{margin:6px 0 2px;font-size:42px;line-height:1.12;letter-spacing:.05em}
 }
 .section-title:before{
   content:"";width:5px;height:21px;border-radius:99px;
-  background:linear-gradient(var(--blue),var(--navy))
+  background:linear-gradient(#ff9a3d,var(--navy))
 }
 .fit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .fit{
-  border:1px solid #dce7f1;background:#f8fbfe;border-radius:14px;padding:14px
+  border:1px solid #f3dfc8;background:#fffaf5;border-radius:14px;padding:14px
 }
 .fit b{display:block;font-size:14px;margin-bottom:4px}
 .fit p{margin:0;color:var(--muted);font-size:13px}
@@ -130,7 +130,7 @@ li::marker{color:#6b9bc5}
 .highlight{font-weight:800;color:var(--ink)}
 .chain{
   margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--blue-soft);
-  color:#2a5578;font-size:12px;font-weight:700
+  color:#8a4a12;font-size:12px;font-weight:700
 }
 
 .tags{display:flex;flex-wrap:wrap;gap:8px}
@@ -148,6 +148,35 @@ li::marker{color:#6b9bc5}
 .print-note{
   margin-top:10px;color:#7d8999;font-size:11px
 }
+
+.theme-picker{position:relative}
+.theme-toggle{
+  display:flex;align-items:center;gap:7px;
+}
+.theme-dot{
+  width:12px;height:12px;border-radius:50%;background:var(--blue);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--blue) 18%, transparent);
+}
+.theme-menu{
+  position:absolute;right:0;top:calc(100% + 9px);z-index:50;
+  min-width:210px;padding:10px;background:#fff;border:1px solid #e2e8f0;
+  border-radius:14px;box-shadow:0 16px 36px rgba(31,41,55,.14);
+  display:none;
+}
+.theme-menu.open{display:block}
+.theme-title{font-size:12px;color:#7a8494;margin:2px 4px 8px}
+.theme-option{
+  width:100%;display:flex;align-items:center;gap:10px;
+  border:0;background:transparent;border-radius:10px;
+  padding:9px 10px;cursor:pointer;color:#344054;text-align:left;
+}
+.theme-option:hover{background:#f7f8fa}
+.theme-option.active{background:#f5f7fa;font-weight:800}
+.theme-swatch{
+  width:16px;height:16px;border-radius:50%;flex:0 0 auto;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);
+}
+.theme-name{font-size:13px}
 
 @media (max-width: 900px){
   .nav{display:none}
@@ -181,7 +210,7 @@ li::marker{color:#6b9bc5}
   html,body{background:#fff !important}
   body{font-size:10.5px;line-height:1.48}
   .shell{width:100%;max-width:none;padding:0}
-  .topbar,.footer,.print-note{display:none !important}
+  .topbar,.footer,.print-note,.theme-menu{display:none !important}
   .hero,.card,.metric{box-shadow:none}
   .hero{
     grid-template-columns:1fr 145px;gap:20px;padding:22px 24px;border-radius:0;
@@ -229,17 +258,40 @@ li::marker{color:#6b9bc5}
       <a href="#skills">技能</a>
     </nav>
     <div class="actions">
+      <div class="theme-picker" id="themePicker">
+        <button class="btn theme-toggle" type="button" onclick="toggleThemeMenu(event)" aria-label="切换主题颜色">
+          <span class="theme-dot"></span><span>换颜色</span>
+        </button>
+        <div class="theme-menu" id="themeMenu">
+          <div class="theme-title">选择主题色</div>
+          <button class="theme-option active" data-theme="orange" onclick="setTheme('orange')">
+            <span class="theme-swatch" style="background:#f57c00"></span><span class="theme-name">简知橙（默认）</span>
+          </button>
+          <button class="theme-option" data-theme="blue" onclick="setTheme('blue')">
+            <span class="theme-swatch" style="background:#2369a8"></span><span class="theme-name">专业蓝</span>
+          </button>
+          <button class="theme-option" data-theme="green" onclick="setTheme('green')">
+            <span class="theme-swatch" style="background:#16856b"></span><span class="theme-name">沉稳绿</span>
+          </button>
+          <button class="theme-option" data-theme="purple" onclick="setTheme('purple')">
+            <span class="theme-swatch" style="background:#7a57c7"></span><span class="theme-name">轻商务紫</span>
+          </button>
+          <button class="theme-option" data-theme="graphite" onclick="setTheme('graphite')">
+            <span class="theme-swatch" style="background:#4b5563"></span><span class="theme-name">高级灰</span>
+          </button>
+        </div>
+      </div>
       <button class="btn primary" onclick="exportPDF()">导出 PDF</button>
     </div>
   </header>
 
   <section class="hero">
     <div>
-      <div class="eyebrow">SALES OPERATIONS · PRIVATE DOMAIN · USER GROWTH</div>
+      <div class="eyebrow">尊敬的简知面试官您好，以下是我的个人简历</div>
       <h1>罗智元</h1>
       <div class="role">销售运营 / 私域运营 / 用户增长（转化方向）</div>
       <div class="contact">
-        <span>浙江 · 杭州</span>
+        <span>广东 · 广州</span>
         <span>13709649335</span>
         <span>1411885150@qq.com</span>
         <span>本科 · 随时到岗</span>
@@ -443,9 +495,89 @@ li::marker{color:#6b9bc5}
 </div>
 
 <script>
+const THEMES = {
+  orange: {
+    navy:"#9a3f00", blue:"#f57c00", blueSoft:"#fff3e6",
+    radial:"#fff0df", hero:"#fff1df", role:"#7a430f",
+    fitBg:"#fffaf5", fitBorder:"#f3dfc8", chain:"#8a4a12"
+  },
+  blue: {
+    navy:"#0f2742", blue:"#2369a8", blueSoft:"#edf5fc",
+    radial:"#eaf3fb", hero:"#eef6fc", role:"#294764",
+    fitBg:"#f8fbfe", fitBorder:"#dce7f1", chain:"#2a5578"
+  },
+  green: {
+    navy:"#174d40", blue:"#16856b", blueSoft:"#eaf8f3",
+    radial:"#e8f6f1", hero:"#edf8f4", role:"#28594c",
+    fitBg:"#f7fcfa", fitBorder:"#d9eee7", chain:"#2b6e5d"
+  },
+  purple: {
+    navy:"#4f3a7a", blue:"#7a57c7", blueSoft:"#f2edfb",
+    radial:"#f0eafa", hero:"#f4effc", role:"#59477a",
+    fitBg:"#fbf9fe", fitBorder:"#e5dbf5", chain:"#665090"
+  },
+  graphite: {
+    navy:"#2f3947", blue:"#4b5563", blueSoft:"#f1f3f5",
+    radial:"#eef0f2", hero:"#f3f4f6", role:"#4b5563",
+    fitBg:"#fafafa", fitBorder:"#e5e7eb", chain:"#525b68"
+  }
+};
+
+function applyTheme(name){
+  const t = THEMES[name] || THEMES.orange;
+  const root = document.documentElement;
+  root.style.setProperty("--navy", t.navy);
+  root.style.setProperty("--blue", t.blue);
+  root.style.setProperty("--blue-soft", t.blueSoft);
+
+  document.body.style.background =
+    `radial-gradient(circle at 85% 0%, ${t.radial} 0, transparent 24rem), linear-gradient(#f8fafc 0, var(--bg) 24rem)`;
+
+  const hero = document.querySelector(".hero");
+  if(hero) hero.style.background =
+    `linear-gradient(135deg, #ffffff 0%, #fffdf9 70%, ${t.hero} 100%)`;
+
+  const role = document.querySelector(".role");
+  if(role) role.style.color = t.role;
+
+  document.querySelectorAll(".fit").forEach(el => {
+    el.style.background = t.fitBg;
+    el.style.borderColor = t.fitBorder;
+  });
+  document.querySelectorAll(".chain").forEach(el => {
+    el.style.color = t.chain;
+  });
+
+  document.querySelectorAll(".theme-option").forEach(el => {
+    el.classList.toggle("active", el.dataset.theme === name);
+  });
+
+  localStorage.setItem("resume-theme", name);
+}
+
+function setTheme(name){
+  applyTheme(name);
+  document.getElementById("themeMenu")?.classList.remove("open");
+}
+
+function toggleThemeMenu(event){
+  event.stopPropagation();
+  document.getElementById("themeMenu")?.classList.toggle("open");
+}
+
+document.addEventListener("click", (event) => {
+  const picker = document.getElementById("themePicker");
+  if(picker && !picker.contains(event.target)){
+    document.getElementById("themeMenu")?.classList.remove("open");
+  }
+});
+
 function exportPDF(){
   window.print();
 }
+
+// 默认橙色；若浏览者此前选择过主题，则保留其选择。
+applyTheme(localStorage.getItem("resume-theme") || "orange");
 </script>
 </body>
 </html>
