@@ -1,0 +1,119 @@
+.hero-motion-ready .hero-inner {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.hero-controls {
+  display: flex;
+  flex-wrap: wrap;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 19px;
+  position: relative;
+  z-index: 2;
+  border-bottom: 1px solid #c9d9ee;
+}
+
+.hero-motion-ready .hero-slide {
+  grid-area: 1 / 1;
+  align-self: start;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .24s ease-out;
+}
+
+@supports (grid-template-rows: subgrid) {
+  .hero-motion-ready .hero-inner { grid-template-rows: repeat(5, auto); }
+  .hero-motion-ready .hero-slide {
+    display: grid;
+    grid-area: 1 / 1 / span 4 / 2;
+    grid-template-rows: subgrid;
+    align-self: stretch;
+  }
+  .hero-motion-ready .hero-controls { grid-row: 5; }
+}
+
+.hero-motion-ready .hero-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .36s ease-out .16s;
+}
+
+.hero-motion-ready .hero-slide.is-leaving {
+  visibility: visible;
+}
+
+.hero-motion-ready[data-hero-theme="waf"] .module-far {
+  opacity: .65;
+}
+
+.hero-motion-ready .floating-module {
+  transition: opacity .7s ease;
+}
+
+.hero-module-brand {
+  filter: drop-shadow(0 0 2px #fff);
+}
+
+.hero-motion-ready .ribbon-field {
+  animation-duration: 8s;
+}
+
+.motion-off .hero-motion-ready *,
+.motion-off .hero-motion-ready *::before,
+.motion-off .hero-motion-ready *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+.hero.is-paused .hero-art *,
+.hero.is-paused .hero-art::before,
+.hero.is-paused .hero-art::after {
+  animation-play-state: paused !important;
+}
+
+.hero-current {
+  --flow-time: 6s;
+  --flow-delay: 0s;
+  stroke-linecap: round;
+  animation: hero-flow-travel var(--flow-time) linear var(--flow-delay) infinite;
+}
+.flow-wide { stroke-dasharray: 15 35; stroke-width: 17; opacity: .67; }
+.flow-aqua { --flow-time: 6.7s; --flow-delay: -2.4s; }
+.flow-indigo { --flow-time: 8.1s; --flow-delay: -5.3s; stroke-width: 12; opacity: .63; }
+.flow-thread { stroke-dasharray: 9 41; stroke-width: 3.7; opacity: .9; }
+.flow-edge { --flow-time: 5.8s; --flow-delay: -1.4s; }
+.flow-arc { --flow-time: 7.4s; --flow-delay: -3.2s; stroke-width: 2.6; }
+.flow-front { --flow-time: 6.2s; --flow-delay: -4.4s; stroke-dasharray: 4 46; stroke-width: 2.4; }
+.flow-packets { stroke-dasharray: .12 12.38; stroke-width: 4; opacity: .83; }
+.flow-packets-near { --flow-time: 8s; --flow-delay: -5.7s; }
+.flow-packets-far { --flow-time: 9.1s; --flow-delay: -2.7s; stroke-width: 2.7; }
+.tile-current { --flow-time: 4.8s; --flow-delay: -1.3s; stroke-dasharray: 17 83; stroke-width: 2.3; opacity: .78; }
+.tile-current-far { --flow-delay: -3.1s; }
+
+@keyframes hero-flow-travel {
+  to { stroke-dashoffset: -100; }
+}
+
+@media (max-width: 600px) {
+  .hero-controls button { font-size: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-motion-ready .ribbon-field, .hero-motion-ready .stars { animation: none; }
+  .hero-motion-ready .floating-module {
+    --module-rise: -17px;
+    --module-drift: 2px;
+    --module-tilt: 0deg;
+    animation-duration: 6.4s;
+  }
+  .hero-motion-ready .module-far {
+    --module-rise: -10px;
+    --module-drift: -1px;
+    animation-duration: 7.5s;
+  }
+  .hero-current { animation-duration: calc(var(--flow-time) * 1.45); }
+  .flow-wide { opacity: .52; }
+  .hero-motion-ready .hero-slide.is-active, .hero-motion-ready .hero-slide { transition: opacity .18s ease; }
+}

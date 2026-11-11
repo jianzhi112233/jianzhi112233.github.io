@@ -1,0 +1,183 @@
+.tab-panels {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  isolation: isolate;
+}
+.tab-panel {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+.tab-panel[aria-hidden="true"] {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(5px);
+  transition: opacity .16s ease-out, transform .22s ease-out, visibility 0s .22s;
+}
+.tab-panel[aria-hidden="false"] {
+  z-index: 1;
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .24s .035s ease-out, transform .27s cubic-bezier(.22, .61, .36, 1);
+}
+
+.product-switcher {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: fit-content;
+  max-width: 100%;
+  margin: 22px auto 27px;
+  padding: 4px;
+  border: 1px solid #e3e9f2;
+  border-radius: 30px;
+  background: #f0f3f8;
+}
+.product-switcher::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 4px auto 4px 4px;
+  width: calc((100% - 8px) / 3);
+  border-radius: 25px;
+  background: #fff;
+  box-shadow: 0 1px 4px #20375c1f;
+  transform: translateX(calc(100% * var(--active-tab, 0)));
+  transition: transform .26s cubic-bezier(.22, .61, .36, 1);
+}
+.product-switcher a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 clamp(12px, 1.9vw, 24px);
+  border-radius: 25px;
+  color: #415573;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.product-switcher a[aria-selected="true"] { color: var(--blue-strong); font-weight: 650; }
+.product-switcher a:hover { color: var(--blue-strong); }
+.product-switcher a:focus-visible { outline-offset: -2px; }
+
+.product-showcase-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  align-items: start;
+  gap: clamp(24px, 4.6vw, 67px);
+}
+.demo-stage { position: relative; }
+.defense-media {
+  --scene-x: 0px;
+  --scene-y: 0px;
+  --label-x: 0px;
+  --label-y: 0px;
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 16 / 9;
+  background: radial-gradient(ellipse at 54% 57%, #eaf5ffb8, #f2f8ff53 53%, transparent 76%);
+}
+.defense-media[data-scene="access"] { background: radial-gradient(ellipse at 54% 57%, #eaf1ffb8, #f3f7ff53 53%, transparent 76%); }
+.defense-media[data-scene="speed"] { background: radial-gradient(ellipse at 54% 57%, #e8f8fdb8, #f1f9fd53 53%, transparent 76%); }
+.defense-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mask-image: radial-gradient(ellipse at 50% 50%, #000 58%, #000 65%, transparent 100%);
+  transform: translate3d(var(--scene-x), var(--scene-y), 0) scale(1.045);
+  transition: transform .18s ease-out;
+}
+.media-label {
+  position: absolute;
+  display: block;
+  max-width: calc(100% - 12px);
+  padding: 6px 10px;
+  border: 1px solid #caddf5c7;
+  border-radius: 6px;
+  background: #f4faffed;
+  box-shadow: 0 3px 10px #5079aa14;
+  color: #264a7b;
+  font-size: clamp(10px, .95vw, 13px);
+  line-height: 1.45;
+  pointer-events: none;
+  transform: translate3d(var(--label-x), var(--label-y), 0);
+  transition: transform .2s ease-out;
+}
+.media-label-title { top: 5%; left: 1%; font-weight: 640; }
+.media-label-note { bottom: 5%; right: 1%; background: #fffefaee; }
+
+.defense-copy { position: relative; padding-top: 14px; }
+.demo-label { color: #25569a; font-size: 12px; font-weight: 660; }
+.defense-copy h3 { margin: 3px 0 6px; font-size: clamp(19px, 1.8vw, 25px); line-height: 1.38; }
+.defense-copy > p:not(.demo-label) { color: var(--muted); font-size: 13px; }
+.defense-copy .feature-actions { margin-top: 11px; }
+.capability-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px clamp(20px, 3vw, 40px);
+}
+.capability-list .capability { padding: 3px 0 0; }
+.capability > div { min-width: 0; }
+.capability p { margin-block: 6px 7px; }
+.capability > div > a { display: inline-block; }
+:is(#panel-access, #panel-speed) .capability-list { grid-template-columns: minmax(0, 1fr); gap: 0; }
+:is(#panel-access, #panel-speed) .capability { padding-block: 17px; border-bottom: 1px solid var(--line); }
+:is(#panel-access, #panel-speed) .capability:first-child { padding-top: 3px; }
+:is(#panel-access, #panel-speed) .capability:last-child { border-bottom: 0; padding-bottom: 5px; }
+.tip-marker {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 5px;
+  min-height: var(--control-height);
+  padding: 3px 1px;
+  border: 0;
+  background: none;
+  color: var(--blue-strong);
+  font-size: 13px;
+  font-weight: 580;
+}
+.tip-marker:hover, .tip-marker[aria-expanded="true"] { text-decoration: underline; text-underline-offset: 3px; }
+.demo-tip {
+  position: absolute;
+  z-index: 3;
+  width: min(265px, 100%);
+  bottom: calc(100% + 5px);
+  left: 0;
+  padding: 12px;
+  border: 1px solid #cbdcf2;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 8px 21px #15366223;
+  color: #26496e;
+  font-size: 12px;
+}
+.demo-tip p { margin-top: 4px; }
+
+.motion-off .tab-panel, .motion-off .product-switcher::before,
+.motion-off .solution-tabs::after, .motion-off .defense-video, .motion-off .media-label { transition: none; }
+@media (max-width: 870px) {
+  .product-showcase-grid { grid-template-columns: minmax(0, 1fr); gap: 22px; align-content: start; }
+  .defense-showcase { width: min(100%, 640px); margin-inline: auto; }
+}
+@media (max-width: 600px) {
+  .product-panels > .tab-panel[aria-hidden="true"] {
+    contain: size;
+    overflow: clip;
+  }
+  .product-switcher { margin-block: 17px 20px; }
+  .product-switcher a { min-height: 43px; padding-inline: 11px; font-size: 12px; }
+  .defense-copy { padding-top: 11px; }
+  .media-label { padding: 4px 7px; }
+  .capability-list { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .capability-list .capability { padding-block: 12px; }
+  .capability-list .capability + .capability { border-top: 1px solid var(--line); }
+  :is(#panel-access, #panel-speed) .capability { border-bottom: 0; padding-block: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tab-panel[aria-hidden], .product-switcher::before, .defense-video, .media-label { transition: none; transform: none; }
+  .product-switcher::before { transform: translateX(calc(100% * var(--active-tab, 0))); }
+}
