@@ -2,12 +2,15 @@
   const heroElement = document.querySelector('[data-carousel]');
   if (!heroElement) return;
 
-  const motionOff = new URLSearchParams(window.location.search).get('motion') === 'off';
+  const manualMotionOff = new URLSearchParams(window.location.search).get('motion') === 'off';
+  const manualMotionOn = new URLSearchParams(window.location.search).get('motion') === 'on';
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let motionOff = manualMotionOff || (!manualMotionOn && motionPreference.matches);
   const heroSlides = [...heroElement.querySelectorAll('.hero-slide')];
   const heroControls = [...heroElement.querySelectorAll('[data-hero-index]')];
   const themes = ['protection', 'waf', 'network'];
-  const dwellDuration = 5400;
-  const transitionDuration = 520;
+  const dwellDuration = 6800;
+  const transitionDuration = 750;
   let selectedIndex = 0;
   let advanceTimer;
   let cleanupTimer;
@@ -96,6 +99,11 @@
   heroElement.addEventListener('focusin', scheduleAdvance);
   heroElement.addEventListener('focusout', () => queueMicrotask(scheduleAdvance));
   document.addEventListener('visibilitychange', synchronizePlayback);
+  motionPreference.addEventListener('change', () => {
+    motionOff = manualMotionOff || (!manualMotionOn && motionPreference.matches);
+    heroElement.classList.toggle('motion-off', motionOff);
+    synchronizePlayback();
+  });
 
   if ('IntersectionObserver' in window) {
     const visibilityObserver = new IntersectionObserver(entries => {

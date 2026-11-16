@@ -1,7 +1,4 @@
 (() => {
-  const motionOff = new URLSearchParams(window.location.search).get('motion') === 'off';
-  document.documentElement.classList.toggle('motion-off', motionOff);
-
   for (const group of document.querySelectorAll('[data-tabs]')) {
     const tabList = group.querySelector('[role="tablist"]');
     const tabs = [...tabList.querySelectorAll('[role="tab"]')];
@@ -9,18 +6,17 @@
     let activeIndex = -1;
 
     function activate(index) {
-      if (index === activeIndex) return;
+      if (index < 0 || index >= tabs.length || index === activeIndex) return;
       activeIndex = index;
       tabList.style.setProperty('--active-tab', String(index));
       tabs.forEach((tab, tabIndex) => {
         const selected = tabIndex === index;
-        const panel = panels[tabIndex];
         tab.setAttribute('aria-selected', String(selected));
         tab.tabIndex = selected ? 0 : -1;
-        panel.setAttribute('aria-hidden', String(!selected));
-        panel.inert = !selected;
+        panels[tabIndex].setAttribute('aria-hidden', String(!selected));
+        panels[tabIndex].inert = !selected;
       });
-      group.dispatchEvent(new Event('site-tab-change'));
+      group.dispatchEvent(new CustomEvent('site-tab-change', {detail: {index}}));
     }
 
     function linkedIndex() {
@@ -59,56 +55,46 @@
       const index = linkedIndex();
       if (index >= 0) activate(index);
     });
-  }
 
-  for (const media of document.querySelectorAll('.defense-media')) {
-    const video = media.querySelector('.defense-video');
-    const panel = media.closest('.tab-panel');
-    const group = media.closest('[data-tabs]');
+    if (!group.classList.contains('solutions-wrap')) continue;
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const motionDisabled = new URLSearchParams(window.location.search).get('motion') === 'off';
+    const motionEnabled = new URLSearchParams(window.location.search).get('motion') === 'on';
     let inView = !('IntersectionObserver' in window);
+    let pointerInside = false;
+    let advanceTimer;
 
-    function syncPlayback() {
-      const shouldPlay = !motionOff && inView && !panel.inert && !document.hidden;
-      video.autoplay = shouldPlay;
-      if (!shouldPlay) {
-        document.removeEventListener('click', syncPlayback);
-        video.pause();
-        return;
-      }
-      if (video.paused) {
-        video.play().catch(error => {
-          if (error.name === 'NotAllowedError' && video.autoplay) {
-            document.addEventListener('click', syncPlayback, { once: true });
-          }
-        });
-      }
+    function scheduleAdvance() {
+      window.clearTimeout(advanceTimer);
+      const focusedControl = group.querySelector(':focus-visible');
+      const focusedAction = group.contains(document.activeElement) && document.activeElement.closest('.solution-detail');
+      const paused = motionDisabled || (!motionEnabled && preference.matches) || document.hidden || !inView || pointerInside || focusedControl || focusedAction;
+      group.dataset.motionState = paused ? 'paused' : 'playing';
+      if (paused) return;
+      advanceTimer = window.setTimeout(() => activate((activeIndex + 1) % tabs.length), 7400);
     }
 
-    document.addEventListener('visibilitychange', syncPlayback);
-    group.addEventListener('site-tab-change', syncPlayback);
+    group.addEventListener('site-tab-change', scheduleAdvance);
+    group.addEventListener('pointerenter', event => {
+      if (event.pointerType !== 'mouse') return;
+      pointerInside = true;
+      scheduleAdvance();
+    });
+    group.addEventListener('pointerleave', () => {
+      pointerInside = false;
+      scheduleAdvance();
+    });
+    group.addEventListener('focusin', scheduleAdvance);
+    group.addEventListener('focusout', () => queueMicrotask(scheduleAdvance));
+    document.addEventListener('visibilitychange', scheduleAdvance);
+    preference.addEventListener('change', scheduleAdvance);
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver(([entry]) => {
         inView = entry.isIntersecting;
-        syncPlayback();
-      }, {threshold: 0.12});
-      observer.observe(video);
+        scheduleAdvance();
+      }, {threshold: .2});
+      observer.observe(group);
     }
-    syncPlayback();
-
-    if (!motionOff) {
-      function setParallax(x, y) {
-        media.style.setProperty('--scene-x', (x * 10).toFixed(1) + 'px');
-        media.style.setProperty('--scene-y', (y * 8).toFixed(1) + 'px');
-        media.style.setProperty('--label-x', (x * -7).toFixed(1) + 'px');
-        media.style.setProperty('--label-y', (y * -5).toFixed(1) + 'px');
-      }
-      media.addEventListener('pointermove', event => {
-        if (event.pointerType !== 'mouse') return;
-        const box = media.getBoundingClientRect();
-        setParallax((event.clientX - box.left) / box.width - .5,
-                    (event.clientY - box.top) / box.height - .5);
-      });
-      media.addEventListener('pointerleave', () => setParallax(0, 0));
-    }
+    scheduleAdvance();
   }
 })();

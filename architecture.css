@@ -1,0 +1,81 @@
+.solution-detail { grid-template-columns: minmax(0, 1fr); align-items: start; align-content: start; gap: 26px; padding: 30px; }
+.solution-detail > .solution-summary { display: grid; grid-template-columns: minmax(195px, .8fr) minmax(0, 1.6fr) auto; column-gap: 28px; align-items: center; }
+.solution-detail > .solution-summary:first-child { max-width: none; }
+.solution-summary h3 { grid-column: 1; grid-row: 1; margin-bottom: 6px; font-size: 27px; }
+.solution-summary > p { grid-column: 2; grid-row: 1 / span 2; font-size: 15px; }
+.solution-summary .tags { grid-column: 1; grid-row: 2; margin: 6px 0 0; gap: 5px; }
+.solution-summary .tags span { font-size: 12px; padding: 3px 6px; }
+.solution-summary > .btn, .solution-summary > .hero-actions { grid-column: 3; grid-row: 1 / span 2; margin-top: 0; }
+.solution-summary > .hero-actions { flex-direction: column; align-items: stretch; }
+.solution-summary .hero-actions .btn { margin-top: 0; font-size: 14px; }
+.solution-visual.architecture-diagram { --architecture-blue: #1556d6; width: 100%; margin: 0; padding: 30px 26px; display: grid; grid-template-columns: minmax(0, 1fr) 44px minmax(0, 2.65fr) 44px minmax(0, 1.12fr); align-items: stretch; gap: 0; overflow: hidden; background-image: radial-gradient(#ffffffae 1px, transparent 1px), linear-gradient(120deg, #c4e2ff, #d4dfff 54%, #d1ccfb); background-size: 18px 18px, 100% 100%; }
+.architecture-panel { min-width: 0; background: #f6faff92; border: 1px solid #ffffffdb; padding: 17px 14px; box-shadow: 0 12px 25px #3564ba12; }
+.architecture-panel h4 { font-size: 16px; font-weight: 650; color: #133675; line-height: 1.5; margin: 0 0 16px; }
+.architecture-panel h4 small { display: block; font-size: 12px; color: #466899; font-weight: 400; margin-top: 2px; }
+.architecture-nodes { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 0; margin: 0; list-style: none; }
+.architecture-node { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 74px; gap: 7px; padding: 12px 8px; background: #f8fbffed; color: #1d4487; font-size: 14px; font-weight: 550; line-height: 1.5; text-align: center; }
+.architecture-node svg, .architecture-capability svg { flex: 0 0 22px; width: 22px; height: 22px; color: #286ee9; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.architecture-core { padding: 14px; display: flex; flex-direction: column; background: #f1f6ffb8; }
+.architecture-core h4 { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: linear-gradient(100deg, #2e77f5, #777ff5); color: #fff; padding: 13px 14px; margin-bottom: 14px; font-size: 17px; }
+.architecture-core h4 small { font-size: 12px; color: #fff; margin: 0; background: #ffffff24; padding: 3px 6px; white-space: nowrap; }
+.architecture-capabilities { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; list-style: none; padding: 0; margin: 0; }
+.architecture-capability { display: flex; align-items: center; min-height: 62px; gap: 11px; padding: 12px; color: #183d7a; background: #f6faffeb; font-size: 14px; font-weight: 550; line-height: 1.5; }
+.architecture-core > .architecture-policy { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 17px; margin: 14px 0 0; padding: 11px 8px; color: #184688; background: #eaf3ffdc; border: 1px solid #92b6fb; font-size: 13px; line-height: 1.5; }
+.architecture-outcomes .architecture-node { align-items: flex-start; flex-direction: row; text-align: left; min-height: 74px; gap: 9px; border: 1px solid #b8c6fa; background: #f7f4ffcc; color: #514d9f; }
+.architecture-outcomes .architecture-node svg { color: #7367c7; }
+.architecture-link { align-self: center; width: 44px; height: 80px; fill: none; stroke: #3574dd; stroke-width: 1.7; }
+.architecture-link .architecture-signal { stroke: #f1ffff; stroke-width: 3; stroke-dasharray: 10 34; animation: architecture-transfer 1.8s linear infinite; animation-play-state: var(--scene-play-state); }
+.architecture-core .architecture-policy span { white-space: nowrap; }
+@keyframes architecture-transfer { to { stroke-dashoffset: -44; } }
+
+@media (max-width: 1180px) {
+  .solution-detail > .solution-summary { grid-template-columns: minmax(180px, .85fr) minmax(0, 1.4fr) auto; gap: 12px 20px; }
+  .solution-summary h3 { font-size: 25px; }
+  .solution-summary .tags { gap: 4px; }
+  .solution-visual.architecture-diagram { padding: 24px 18px; grid-template-columns: minmax(0, 1fr) 30px minmax(0, 2.6fr) 30px minmax(0, 1.1fr); }
+  .architecture-link { width: 30px; }
+  .architecture-panel { padding: 14px 10px; }
+  .architecture-core h4 { font-size: 15px; padding: 11px 9px; }
+  .architecture-core h4 small { display: none; }
+  .architecture-capability { padding: 10px 8px; gap: 7px; font-size: 13px; }
+}
+@media (max-width: 870px) {
+  .solution-detail { padding: 25px 20px; gap: 22px; }
+  .solution-detail > .solution-summary { grid-template-columns: minmax(0, 1fr) auto; }
+  .solution-summary h3 { grid-row: 1; }
+  .solution-summary > p { grid-column: 1; grid-row: 2; }
+  .solution-summary .tags { grid-column: 1; grid-row: 3; }
+  .solution-summary > .btn, .solution-summary > .hero-actions { grid-column: 2; grid-row: 1 / span 3; }
+  .solution-visual.architecture-diagram { grid-template-columns: minmax(0, 1fr); padding: 24px; }
+  .architecture-link { width: 44px; height: 32px; transform: rotate(90deg); justify-self: center; }
+  .architecture-nodes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .architecture-node { min-height: 70px; }
+  .architecture-panel h4 { margin-bottom: 12px; }
+  .architecture-panel h4 small { display: inline; margin-left: 10px; }
+  .architecture-core h4 { font-size: 17px; }
+  .architecture-core h4 small { display: block; }
+  .architecture-outcomes .architecture-node { align-items: center; flex-direction: column; text-align: center; }
+  .architecture-capability { min-height: 59px; padding: 12px; font-size: 14px; }
+}
+@media (max-width: 600px) {
+  .solution-detail { padding: 24px 16px 16px; gap: 20px; }
+  .solution-detail > .solution-summary { display: flex; flex-direction: column; align-items: flex-start; gap: 0; min-height: 252px; }
+  .solution-summary h3 { font-size: 25px; margin-bottom: 13px; }
+  .solution-summary > p { font-size: 15px; }
+  .solution-summary .tags { margin: 16px 0; }
+  .solution-summary > .btn, .solution-summary > .hero-actions { margin-top: auto; }
+  .solution-summary > .hero-actions { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+  .solution-summary .hero-actions .btn { padding-inline: 11px; font-size: 13px; }
+  .solution-visual.architecture-diagram { width: 100%; padding: 16px 12px; margin: 0; }
+  .architecture-panel { padding: 12px 10px; }
+  .architecture-panel h4 { font-size: 15px; }
+  .architecture-panel h4 small { font-size: 12px; }
+  .architecture-nodes { gap: 7px; }
+  .architecture-node { font-size: 13px; padding: 10px 3px; min-height: 76px; }
+  .architecture-core h4 { padding: 11px 8px; font-size: 15px; }
+  .architecture-core h4 small { display: none; }
+  .architecture-capabilities { gap: 7px; }
+  .architecture-capability { flex-direction: column; justify-content: center; gap: 7px; min-height: 83px; padding: 10px 5px; font-size: 13px; text-align: center; }
+  .architecture-core > .architecture-policy { font-size: 12px; gap: 6px 10px; }
+  .architecture-link { height: 30px; }
+}

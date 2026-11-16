@@ -47,8 +47,11 @@ header.addEventListener('keydown', event => {
 });
 
 function showTip(stage, visible) {
-  stage.querySelector('.demo-tip').hidden = !visible;
-  stage.querySelector('.tip-marker').setAttribute('aria-expanded', String(visible));
+  const tip = stage.querySelector('.demo-tip');
+  const marker = stage.querySelector('.tip-marker');
+  if (!tip || !marker) return;
+  tip.hidden = !visible;
+  marker.setAttribute('aria-expanded', String(visible));
 }
 document.addEventListener('pointerover', event => {
   const marker = event.target.closest('.tip-marker');
