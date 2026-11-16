@@ -5,6 +5,38 @@
   const sceneStates = new Map();
   const stepStates = new Map();
 
+  function syncStep(step, state, animated) {
+    if (state.animation) state.animation.hidden = !animated;
+    step.dataset.motionState = animated && state.animation ? 'playing' : state.failed ? 'fallback' : 'paused';
+    if (!animated || state.animation || state.loading || state.failed) return;
+    state.loading = true;
+    const animation = new Image();
+    animation.className = 'step-animation';
+    animation.alt = '';
+    animation.setAttribute('aria-hidden', 'true');
+    animation.hidden = true;
+    animation.onload = async () => {
+      try {
+        await animation.decode?.();
+      } catch {}
+      state.loading = false;
+      if (!animation.naturalWidth) {
+        state.failed = true;
+        syncScenes();
+        return;
+      }
+      state.animation = animation;
+      step.append(animation);
+      syncScenes();
+    };
+    animation.onerror = () => {
+      state.loading = false;
+      state.failed = true;
+      syncScenes();
+    };
+    animation.src = step.dataset.animatedSrc;
+  }
+
   function syncVideo(scene, playing, motionOff) {
     const video = scene.querySelector('video');
     if (!video || scene.classList.contains('is-video-error')) return;
@@ -37,11 +69,9 @@
       scene.dataset.motionState = playing ? 'playing' : 'paused';
       syncVideo(scene, playing, motionOff);
     }
-    for (const [image, state] of stepStates) {
+    for (const [step, state] of stepStates) {
       const animated = state.inView && !document.hidden && !motionOff;
-      const source = animated ? image.dataset.animatedSrc : image.dataset.stillSrc;
-      if (image.getAttribute('src') !== source) image.src = source;
-      image.dataset.motionState = animated ? 'playing' : 'paused';
+      syncStep(step, state, animated);
     }
   }
 
@@ -79,9 +109,9 @@
     for (const entry of entries) stepStates.get(entry.target).inView = entry.isIntersecting;
     syncScenes();
   }, {threshold: .12}) : null;
-  for (const image of document.querySelectorAll('.step-visual[data-animated-src]')) {
-    stepStates.set(image, {inView: !stepObserver});
-    stepObserver?.observe(image);
+  for (const step of document.querySelectorAll('.step-visual[data-animated-src]')) {
+    stepStates.set(step, {inView: !stepObserver, loading: false, failed: false, animation: null});
+    stepObserver?.observe(step);
   }
 
   window.setInterval(() => {
@@ -98,6 +128,14 @@
   for (const group of document.querySelectorAll('[data-tabs]')) group.addEventListener('site-tab-change', syncScenes);
   preference.addEventListener('change', syncScenes);
   document.addEventListener('visibilitychange', syncScenes);
+  window.addEventListener('pageshow', syncScenes);
+  window.addEventListener('online', () => {
+    for (const state of stepStates.values()) state.failed = false;
+    for (const image of document.querySelectorAll('.network-art .scene-art, .step-poster')) {
+      if (image.complete && !image.naturalWidth) image.src = image.getAttribute('src');
+    }
+    syncScenes();
+  });
   syncScenes();
 
   if ('IntersectionObserver' in window) {
